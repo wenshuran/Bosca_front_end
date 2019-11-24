@@ -3,42 +3,19 @@
     <el-container style="height: 500px; border: 1px solid #eee;">
       <el-aside width="17%" style="background-color: rgb(238, 241, 246);">
         <el-input
-          placeholder="输入关键字进行过滤"
-          v-model="filterText" style="margin-top: 22%">
+          placeholder="Filter"
+          v-model="filterText" style="height: 100px">
         </el-input>
-
-        <el-tree
-          class="filter-tree"
-          :data="data"
-          :props="defaultProps"
-          default-expand-all
-          draggable
-          :filter-node-method="filterNode"
-          ref="tree">
-        </el-tree>
       </el-aside>
 
       <el-container>
-        <div v-model="filelist"></div>
-        <el-header style="text-align: right; font-size: 25px">
-          <el-dropdown>
-            <div style="font-size: 160%"><i class="el-icon-setting" style="margin-right: 15px"></i></div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="showUpload = true">Add File</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <span>username</span>
+        <el-header >
+          <el-button icon="el-icon-upload2" @click.native="showUpload = true" size="small" style="float: left; margin-top: 14px;">Upload</el-button>
+          <span style="float: right;font-size: 25px">username</span>
         </el-header>
 
         <el-main>
-          <el-table :data="tableData">
-            <el-table-column prop="date" label="日期" width="140">
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column>
-          </el-table>
+
         </el-main>
       </el-container>
     </el-container>
@@ -52,8 +29,8 @@
         ref="upload"
         class="upload-demo"
         drag
-        with-credentials="true"
-        action="http://localhost:8080/amazonS3/upload"
+        action="http://localhost:8081/amazonS3/upload"
+        :data="userInfo"
         :auto-upload="false"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
@@ -147,6 +124,10 @@
                 defaultProps: {
                     children: 'children',
                     label: 'label'
+                },
+                userInfo: {
+                    userToken: "11111",
+                    userName: "wdznb"
                 }
             };
         },

@@ -26,7 +26,8 @@ var store = new Vuex.Store({
   },
   mutations:{
     [LOGIN](state, token){
-      cookies.set("jwtoken", token);
+        cookies.set("jwtoken", token);
+      console.log(cookies.keys())
       state.jwtoken = token;
     },
     [LOGOUT](state){
@@ -55,7 +56,7 @@ router.beforeEach((to, from, next) => {
     if (store.getters.jwtoken){
       next();
     }
-    else if (this.$cookies.isKey("jwtoken")){
+    else if (cookies.isKey("jwtoken")){
       store.commit('autoLogin');
       next();
     }
