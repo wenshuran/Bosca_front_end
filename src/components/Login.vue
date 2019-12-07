@@ -58,22 +58,37 @@
                 else{
                     this.fullscreenLoading = true;
                     this.$http({
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
                         method: 'post',
                         data: {
                             "email": this.loginInfo.username,
                             "password": this.loginInfo.password
                         },
-                        url: 'https://22d5c6e0-8f52-4c42-914c-26dd11d2227f.mock.pstmn.io/user/login1' //TODO
+                        url: 'http://localhost:8011/user-ws/user/login'
                     }).then(result => {
-                        this.fullscreenLoading = false;
+                        console.log(result);
                         if (result.status === 200){
                             var data = result.data;
-                            this.$store.commit('LOGIN', data.token);
-                            this.$message({
-                                message: 'Login Success!',
-                                type: 'success',
-                            });
-                            this.$router.push('/manage');
+                            this.$store.commit('LOGIN', {token: result.headers['token'], user: result.headers['userid']});
+                            this.$http({
+                                method: 'get',
+                                url: 'http://localhost:8011/user-ws/users/'+result.headers['userid']
+                            }).then(
+                                result1 => {
+                                    this.$store.commit('SETROOT', result1.data.rootDir);
+                                }
+                            );
+                            setTimeout(() => {
+                                this.$message({
+                                    message: 'Login Success!',
+                                    type: 'success',
+                                });
+                                this.fullscreenLoading = false;
+                                this.$router.push('/');
+                            }, 300);
+
                         }
                         else {
                             this.$message.error('Username or password wrong!');

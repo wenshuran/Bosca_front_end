@@ -18,25 +18,39 @@ Vue.use(ElementUI);
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
+export const SETROOT = 'SETROOT';
 
 var store = new Vuex.Store({
   state:{
     username:'',
     jwtoken:'',
+    userid:'',
+    rootdir:''
   },
   mutations:{
-    [LOGIN](state, token){
-        cookies.set("jwtoken", token);
-      console.log(cookies.keys())
-      state.jwtoken = token;
+    [LOGIN](state, payload){
+      cookies.set('jwtoken', payload.token);
+      cookies.set("userid", payload.user);
+      state.jwtoken = payload.token;
+      state.userid = payload.user;
     },
     [LOGOUT](state){
       cookies.remove("jwtoken");
+      cookies.remove("userid");
+      cookies.remove("rootdir");
       state.jwtoken = '';
+      state.userid = '';
+      state.rootdir = '';
+    },
+    [SETROOT](state, root){
+      state.rootdir = root;
+      cookies.set("rootdir", root);
     },
     autoLogin(state){
-      if (cookies.isKey("jwtoken")){
+      if (cookies.isKey("jwtoken") && cookies.isKey("userid") && cookies.isKey("rootdir")){
         state.jwtoken = cookies.get("jwtoken");
+        state.userid = cookies.get("userid");
+        state.rootdir = cookies.get("root");
         return true;
       }
       else
@@ -45,7 +59,28 @@ var store = new Vuex.Store({
   },
   getters:{
     jwtoken:state => {
-      return state.jwtoken;
+      if (state.jwtoken !== '')
+        return state.jwtoken;
+      else if (cookies.get('jwtoken') !== '')
+        return cookies.get('jwtoken');
+      else
+        return null;
+    },
+    userid:state => {
+      if (state.userid !== '')
+        return state.userid;
+      else if (cookies.get('userid') !== '')
+        return cookies.get('userid');
+      else
+        return null;
+    },
+    rootdir: state => {
+      if (state.rootdir !== '')
+        return state.rootdir;
+      else if (cookies.get('rootdir') !== '')
+        return cookies.get('rootdir');
+      else
+        return null;
     }
   }
 });
@@ -78,7 +113,7 @@ router.afterEach(to => {
 
 axios.interceptors.request.use(value => {
   if (store.getters.jwtoken){
-    value.headers.Authorization = store.getters.jwtoken;
+    value.headers.Authorization = 'Bearer ' + store.getters.jwtoken;
   }
   return value;
 },error => {

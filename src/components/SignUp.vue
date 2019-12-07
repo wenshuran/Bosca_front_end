@@ -9,7 +9,7 @@
         <el-form-item label="username">
           <el-input v-model="signUpInfo.username" ref="username" @keyup.enter.native="signUp"></el-input>
         </el-form-item>
-        <el-form-item label="password">
+        <el-form-item label="email">
           <el-input v-model="signUpInfo.email" @keyup.enter.native="signUp"></el-input>
         </el-form-item>
         <el-form-item label="password">

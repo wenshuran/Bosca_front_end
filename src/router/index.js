@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from "../components/Login";
-import Manage from "../components/Manage";
+import Manage1 from "../components/Manage1";
 import SignUp from "../components/SignUp";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: '/',
+      path: '/login',
       name: 'Login',
       component: Login
     },
@@ -19,12 +19,12 @@ export default new Router({
       component: SignUp
     },
     {
-      path: '/manage',
+      path: '/',
       name: 'Manage',
-      component: Manage,
-      meta: {
-        requireAuth: true,//only for debug
-      }
+      component: Manage1,
+      // meta: {
+      //   requireAuth: true,//only for debug
+      // }
     }
   ]
 })
